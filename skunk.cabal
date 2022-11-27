@@ -9,6 +9,7 @@ executable skunk
     main-is:          Main.hs
 
     other-modules:    Syntax
+                    , Eval
 
     build-depends:    base ^>=4.14.3.0
     hs-source-dirs:   src
