@@ -57,3 +57,5 @@ fnp = fmap Fn symbol <* token "." <* wsp <*> astp
 defp = token "\\def" *> fmap Def symbol <*> (fmap Ref symbol <|> (token "{" *> wsp  *> astp <* wsp <* token "}")) <* wsp
 
 astp = foldl1 Seq <$> rep (defp <|> fnp <|> applp <|> fmap Lit litp)
+
+filep = astp <|> return (Lit "")
