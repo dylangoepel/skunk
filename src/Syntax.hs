@@ -42,12 +42,18 @@ predp p = P $ \s -> case takeWhile p s of
     "" -> Nothing
     x -> Just (x, drop (length x) s)
 
+wsp = predp (`elem` "\t\n ") <|> return ""
+
 symbol = token "\\" *> predp (`elem` ['a'..'z'])
 litp = predp $ not . (`elem` "\\{}")
 
-data AST = Lit String | Appl String [AST] | Seq [AST]
+data AST = Lit String | Ref String | Appl AST AST | Seq AST AST | Fn String AST | Def String AST
     deriving Show
 
-applp = (fmap Appl symbol) <*> (rep $ (flip Appl [] <$> symbol) <|> (token "{" *> astp <* token "}"))
+applp = foldl1 Appl <$> (rep $ (fmap Ref symbol) <|> (token "{" *> wsp *> astp <* wsp <* token "}" <* wsp))
 
-astp = fmap Seq $ rep (applp <|> fmap Lit litp)
+fnp = fmap Fn symbol <* token "." <* wsp <*> astp
+
+defp = token "\\def" *> fmap Def symbol <*> (fmap Ref symbol <|> (token "{" *> wsp  *> astp <* wsp <* token "}")) <* wsp
+
+astp = foldl1 Seq <$> rep (defp <|> fnp <|> applp <|> fmap Lit litp)
