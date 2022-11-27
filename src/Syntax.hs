@@ -50,7 +50,7 @@ litp = predp $ not . (`elem` "\\{}")
 data AST = Lit String | Ref String | Appl AST AST | Seq AST AST | Fn String AST | Def String AST
     deriving Show
 
-applp = foldl1 Appl <$> (rep $ (fmap Ref symbol) <|> (token "{" *> wsp *> astp <* wsp <* token "}" <* wsp))
+applp = foldl1 Appl <$> (rep $ (fmap Ref symbol) <|> (token "{" *> wsp *> astp <* wsp <* token "}" <* wsp) <|> (token "[" *> fmap Lit (predp (/= ']')) <* token "]"))
 
 fnp = fmap Fn symbol <* token "." <* wsp <*> astp
 
