@@ -48,7 +48,7 @@ symbol = token "\\" *> predp (`elem` ['a'..'z'])
 litp = predp $ not . (`elem` "\\{}")
 
 data AST = Lit String | Ref String | Appl AST AST | Seq AST AST | Fn String AST | Def String AST
-    deriving Show
+    deriving (Show, Eq)
 
 applp = foldl1 Appl <$> (rep $ (fmap Ref symbol) <|> (token "{" *> wsp *> astp <* wsp <* token "}" <* wsp) <|> (token "[" *> fmap Lit (predp (/= ']')) <* token "]"))
 
