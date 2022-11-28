@@ -16,12 +16,12 @@ subref s t x = astrec (subref s t) x
 
 ctx :: AST -> AST -> AST
 ctx (Def a b) = subref a b
-ctx (Seq a b) = ctx a . ctx b
+ctx (Seq a b) = (ctx a) . (ctx b)
 ctx x = Seq (undef x)
 
 beta :: AST -> AST
 beta (Appl a b) = case beta a of
-    Fn s t -> subref s b t
+    Fn s t -> beta $ subref s (beta b) t
     x -> Appl x b
 beta x = astrec beta x
 
