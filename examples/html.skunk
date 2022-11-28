@@ -1,0 +1,13 @@
+\def\head{\title.\css.<!doctype HTMl>
+<head>
+    <title>\title</title>
+    <meta charset="utf-8" />
+    <link href="\css" rel="stylesheet" type="text/css">
+</head>}
+\def\title{\title.<h1>\title</h1>}
+\def\body{\content.<body>
+\content
+</body>}
+\def\p{\text.<p>
+\text
+</p>}
